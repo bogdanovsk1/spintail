@@ -1,10 +1,13 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerController : MonoBehaviour
 {
     Rigidbody rb = new Rigidbody();
     Animator animator;
+    public InputActionAsset inputActions;
 
     public float move_speed = 1.5f;
     public float jump_force = 3f;
@@ -17,21 +20,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-    }
-
-    private void OnEnable()
-    {
-        
-    }
-
-    private void OnDisable()
-    {
-        
-    }
-
-    private void Start()
-    {
-        
+        inputActions.FindActionMap("Side").FindAction("Spintail").canceled += OnSpintailCancelled;
     }
 
     private void Update()
@@ -119,9 +108,16 @@ public class PlayerController : MonoBehaviour
     // SPINTAIL
     public void OnSpintail(InputValue value)
     {
-        Debug.Log("Spintail ");
+        Debug.Log("Spintail " + value.isPressed);
+        Time.timeScale = 0.5f;
     }
 
+    public void OnSpintailCancelled(InputAction.CallbackContext context)
+    {
+        Time.timeScale = 1f;
+        Debug.Log("Spintail Cancelled");
+
+    }
 
 
 }
