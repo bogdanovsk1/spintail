@@ -14,26 +14,30 @@ public class PlayerController : MonoBehaviour
     public float move_direction;
     public bool is_can_move = true;
     public bool is_on_ground;
+    public bool is_spintail_started = false;
     public int jump_counter = 0;
 
     
     public void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+
         inputActions.FindActionMap("Side").FindAction("Spintail").canceled += OnSpintailCancelled;
 
-        inputActions.FindActionMap("Side").FindAction("Spintail").started += ctx => Debug.Log("Spintail Started " + ctx.started + "\n"
-            + "is can move " + is_can_move);
-        inputActions.FindActionMap("Side").FindAction("Spintail").performed += ctx => Debug.Log("Spintail Performed " + ctx.performed + "\n"
-            + "is can move " + is_can_move);
 
-        animator = GetComponent<Animator>();
+        //inputActions.FindActionMap("Side").FindAction("Spintail").started += ctx => Debug.Log("Spintail Started " + ctx.started + "\n"
+        //    + "is can move " + is_can_move);
+        //inputActions.FindActionMap("Side").FindAction("Spintail").performed += ctx => animator.SetBool("is_spintail_started", true);
+
+
 
     }
 
     private void Update()
     {
         Move();
+        //Spintail();
     }
 
     
@@ -50,7 +54,6 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputValue value)
     {
         move_direction = value.Get<float>();
-        Debug.Log("OnMove " + move_direction);
 
         if (move_direction == 1)
         {
@@ -68,13 +71,12 @@ public class PlayerController : MonoBehaviour
     // JUMP
     public void OnJump(InputValue value)
     {
-        if (jump_counter < 2)
+        if (jump_counter < 2 && is_can_move)
         {
-            //rb.AddForce(new Vector3(0, jump_force, 0), ForceMode.VelocityChange);
             rb.velocity = new Vector3(rb.velocity.x, jump_force, rb.velocity.z);
-            Debug.Log("OnJump");
+            jump_counter += 1;
         }
-        jump_counter += 1;
+        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -83,6 +85,7 @@ public class PlayerController : MonoBehaviour
         {
             is_on_ground = true;
             jump_counter = 0;
+            animator.SetBool("is_on_ground", is_on_ground);
         }
     }
 
@@ -91,6 +94,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             is_on_ground = false;
+            animator.SetBool("is_on_ground", is_on_ground);
         }
     }
 
@@ -99,24 +103,18 @@ public class PlayerController : MonoBehaviour
     // ATTACK
     public void OnAttack(InputValue input)
     {
-        Debug.Log("Attack ");
-        Debug.Log("On Attack" + "\n"
-            + "is can move " + is_can_move);
+        animator.SetTrigger("attack_trigger_anim");
 
     }
 
     public void AttackStart()
     {
         is_can_move = false;
-        Debug.Log("AttackStart" + "\n"
-            + "is can move " + is_can_move);
     }
 
     public void AttackEnd()
     {
         is_can_move = true;
-        Debug.Log("AttackEnd" + "\n"
-            + "is can move " + is_can_move);
     }
 
 
@@ -126,19 +124,17 @@ public class PlayerController : MonoBehaviour
     public void OnSpintail(InputValue value)
     {
         is_can_move = false;
-        Debug.Log("Spintail ispressed" + value.isPressed + "\n"
-            + "is can move " + is_can_move);
-        Time.timeScale = 0.5f;
-        
+        //Time.timeScale = 0.5f;
+        is_spintail_started = true;
+        animator.SetBool("is_spintail_started", true);
     }
 
     public void OnSpintailCancelled(InputAction.CallbackContext context)
     {
         is_can_move = true;
-        Time.timeScale = 1f;
-        Debug.Log("Spintail Cancelled" + "\n"
-            + "is can move " + is_can_move);
-        
+        //Time.timeScale = 1f;
+        is_spintail_started = false;
+        animator.SetBool("is_spintail_started", false);
     }
 
 
