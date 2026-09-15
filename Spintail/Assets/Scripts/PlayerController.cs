@@ -6,8 +6,8 @@ using static UnityEngine.Rendering.DebugUI;
 public class PlayerController : MonoBehaviour
 {
     Rigidbody rb = new Rigidbody();
-    Animator animator;
     public InputActionAsset inputActions;
+    Animator animator;
 
     public float move_speed = 1.5f;
     public float jump_force = 3f;
@@ -16,11 +16,19 @@ public class PlayerController : MonoBehaviour
     public bool is_on_ground;
     public int jump_counter = 0;
 
+    
     public void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
         inputActions.FindActionMap("Side").FindAction("Spintail").canceled += OnSpintailCancelled;
+
+        inputActions.FindActionMap("Side").FindAction("Spintail").started += ctx => Debug.Log("Spintail Started " + ctx.started + "\n"
+            + "is can move " + is_can_move);
+        inputActions.FindActionMap("Side").FindAction("Spintail").performed += ctx => Debug.Log("Spintail Performed " + ctx.performed + "\n"
+            + "is can move " + is_can_move);
+
+        animator = GetComponent<Animator>();
+
     }
 
     private void Update()
@@ -52,6 +60,8 @@ public class PlayerController : MonoBehaviour
         {
             transform.localScale = new Vector3(-1, 1, 1);
         }
+
+        animator.SetFloat("is_running", Mathf.Abs(move_direction));
     }
 
 
@@ -90,16 +100,23 @@ public class PlayerController : MonoBehaviour
     public void OnAttack(InputValue input)
     {
         Debug.Log("Attack ");
+        Debug.Log("On Attack" + "\n"
+            + "is can move " + is_can_move);
+
     }
 
     public void AttackStart()
     {
         is_can_move = false;
+        Debug.Log("AttackStart" + "\n"
+            + "is can move " + is_can_move);
     }
 
     public void AttackEnd()
     {
         is_can_move = true;
+        Debug.Log("AttackEnd" + "\n"
+            + "is can move " + is_can_move);
     }
 
 
@@ -108,15 +125,20 @@ public class PlayerController : MonoBehaviour
     // SPINTAIL
     public void OnSpintail(InputValue value)
     {
-        Debug.Log("Spintail " + value.isPressed);
+        is_can_move = false;
+        Debug.Log("Spintail ispressed" + value.isPressed + "\n"
+            + "is can move " + is_can_move);
         Time.timeScale = 0.5f;
+        
     }
 
     public void OnSpintailCancelled(InputAction.CallbackContext context)
     {
+        is_can_move = true;
         Time.timeScale = 1f;
-        Debug.Log("Spintail Cancelled");
-
+        Debug.Log("Spintail Cancelled" + "\n"
+            + "is can move " + is_can_move);
+        
     }
 
 
