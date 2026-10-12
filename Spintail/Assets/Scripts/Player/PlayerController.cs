@@ -7,10 +7,13 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody rb = new Rigidbody();
     public InputActionAsset inputActions;
+    ToMouseRotator toMouseRotator;
     Animator animator;
+    SpriteRenderer spriteRenderer;
 
     public float move_speed = 1.5f;
     public float jump_force = 3f;
+    public float launch_force = 5f;
     public float move_direction;
     public bool is_can_move = true;
     public bool is_on_ground;
@@ -22,6 +25,9 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        toMouseRotator = GetComponentInChildren<ToMouseRotator>();
 
         inputActions.FindActionMap("Side").FindAction("Spintail").canceled += OnSpintailCancelled;
 
@@ -37,7 +43,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Move();
-        //Spintail();
     }
 
     
@@ -57,11 +62,15 @@ public class PlayerController : MonoBehaviour
 
         if (move_direction == 1)
         {
-            transform.localScale = new Vector3(1, 1, 1);
+            //transform.localScale = new Vector3(1, 1, 1);
+            //transform.Rotate(0f, 0f, 0f);
+            spriteRenderer.flipX = false;
         }
         else if (move_direction == -1)
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            //transform.localScale = new Vector3(-1, 1, 1);
+            //transform.Rotate(0f, 180f, 0f);
+            spriteRenderer.flipX = true;
         }
 
         animator.SetFloat("is_running", Mathf.Abs(move_direction));
@@ -124,17 +133,36 @@ public class PlayerController : MonoBehaviour
     public void OnSpintail(InputValue value)
     {
         is_can_move = false;
-        //Time.timeScale = 0.5f;
+
+        rb.velocity = Vector3.zero;
+        rb.useGravity = false;
+        //Time.timeScale = 0.1f;
+
         is_spintail_started = true;
         animator.SetBool("is_spintail_started", true);
+
+        Debug.Log("OnSpintail");
     }
 
     public void OnSpintailCancelled(InputAction.CallbackContext context)
     {
-        is_can_move = true;
+        
+        
         //Time.timeScale = 1f;
-        is_spintail_started = false;
+        
         animator.SetBool("is_spintail_started", false);
+
+        
+        if (is_spintail_started)
+        {
+            rb.velocity = launch_force * toMouseRotator.difference;
+        }
+            
+        rb.useGravity = true;
+
+        is_can_move = true;
+        is_spintail_started = false;
+        Debug.Log("OnSpintail Cancelled");
     }
 
 

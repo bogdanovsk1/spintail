@@ -39,8 +39,17 @@
                     "id": "ffc0631c-e770-4383-a74b-f62157838289",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Hold(duration=0.6,pressPoint=0.5)",
+                    "interactions": "Hold(duration=0.31,pressPoint=0.3)",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Spintail_Direction",
+                    "type": "Value",
+                    "id": "4bcd8e7d-636c-4aed-ae83-7326d02e7347",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -195,6 +204,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Spintail",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1b4bf6ec-102c-4145-b148-945fcde7e481",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Spintail_Direction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f748cdab-190e-4b88-9ad7-13ff9bbdee2b",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Spintail_Direction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
