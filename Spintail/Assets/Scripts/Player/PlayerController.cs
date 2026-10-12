@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     ToMouseRotator toMouseRotator;
     Animator animator;
     SpriteRenderer spriteRenderer;
+    GameObject spintail_pointer;
 
     public float move_speed = 1.5f;
     public float jump_force = 3f;
@@ -18,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public bool is_can_move = true;
     public bool is_on_ground;
     public bool is_spintail_started = false;
+    public bool is_spintail2_allowed = false;
     public int jump_counter = 0;
 
     
@@ -28,6 +30,8 @@ public class PlayerController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         toMouseRotator = GetComponentInChildren<ToMouseRotator>();
+        //spintail_pointer = transform.GetChild(1).gameObject;
+        //spintail_pointer.SetActive(false);
 
         inputActions.FindActionMap("Side").FindAction("Spintail").canceled += OnSpintailCancelled;
 
@@ -132,6 +136,8 @@ public class PlayerController : MonoBehaviour
     // SPINTAIL
     public void OnSpintail(InputValue value)
     {
+        //spintail_pointer.SetActive(true);
+        
         is_can_move = false;
 
         rb.velocity = Vector3.zero;
@@ -140,19 +146,26 @@ public class PlayerController : MonoBehaviour
 
         is_spintail_started = true;
         animator.SetBool("is_spintail_started", true);
+        
 
         Debug.Log("OnSpintail");
     }
 
+    public void OnSpintail1Finished()
+    {
+        animator.SetBool("is_spintail2_allowed", true);
+    }
+
     public void OnSpintailCancelled(InputAction.CallbackContext context)
     {
-        
-        
-        //Time.timeScale = 1f;
-        
-        animator.SetBool("is_spintail_started", false);
+        //spintail_pointer.SetActive(false);
 
-        
+        //Time.timeScale = 1f;
+
+        animator.SetBool("is_spintail_started", false);
+        animator.SetBool("is_spintail2_allowed", false);
+
+
         if (is_spintail_started)
         {
             rb.velocity = launch_force * toMouseRotator.difference;

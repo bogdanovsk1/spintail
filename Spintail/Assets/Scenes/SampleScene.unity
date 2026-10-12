@@ -626,6 +626,7 @@ MonoBehaviour:
     type: 3}
   move_speed: 1.5
   jump_force: 3
+  launch_force: 5
   move_direction: 0
   is_can_move: 1
   is_on_ground: 0
