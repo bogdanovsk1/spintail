@@ -303,17 +303,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Spintail_Direction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f748cdab-190e-4b88-9ad7-13ff9bbdee2b"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Spintail_Direction"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         },
